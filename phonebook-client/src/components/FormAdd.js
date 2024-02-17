@@ -1,27 +1,21 @@
-import axios from "axios";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { addPhonebooks } from "../redux/api";
 
-export default function FormAdd({ user, setUser, item, setItem, sort, setSort }) {
+
+export default function PhoneAdd() {
+    const [user, setUser] = useState({ name: '', phone: '' })
     let navigate = useNavigate()
-    const addData = () => {
-        axios.post('http://localhost:3001/api/phonebook', {
-            ...user,
-        }).then((response) => {
-            setItem((item) => [
-                {
-                    id: response.data.id,
-                    name: response.data.name,
-                    phone: response.data.phone
-                },
-                ...item.filter(data => data.id !== response.data.id)
-            ])
-        }).catch((err) => {
-            throw err
-        })
+    const dispatch = useDispatch()
+
+    const AddData = (e) => {
+        e.preventDefault()
+        dispatch(addPhonebooks(user))
         navigate('/')
     }
     return (
-        <form onSubmit={addData}>
+        <form onSubmit={AddData}>
             <div className="container-form-add">
                 <div className="header-add">
                     <input type="text" placeholder="add your name" onChange={(e) => setUser({ ...user, name: e.target.value })} />
